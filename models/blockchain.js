@@ -1,4 +1,4 @@
-const uuid = require('uuid/v1');
+const { v1: uuid } = require('uuid');
 const sha256 = require('sha256');
 const currentNodeUrl = process.argv[3];
 
