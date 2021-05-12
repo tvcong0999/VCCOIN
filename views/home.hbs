@@ -41,8 +41,7 @@
                     technology to ensure safety and security.
                 </p>
 
-                <a href="#" class="btn custom-btn bg-color mt-3" data-aos="fade-up" data-aos-delay="300"
-                    data-toggle="modal" data-target="#membershipForm">Buy now</a>
+                <a href="#buy" class="btn custom-btn bg-color mt-3" data-aos="fade-up" data-aos-delay="300">Buy now</a>
             </div>
 
             <div class="mr-lg-auto mt-3 col-lg-4 col-md-6 col-12">
@@ -64,31 +63,74 @@
         <form>
             <div class="form-row">
                 <div class="col-5 d-flex">
-                    <!-- <i class="fa fa-key" aria-hidden="true"></i> -->
-                    <input type="text" class="form-control" placeholder="Your private key" data-aos="fade-up"
-                        data-aos-delay="300">
-
+                    <input type="text" class="form-control" name="privKey" id="privKey" placeholder="Your private key"
+                        data-aos="fade-up" data-aos-delay="300">
                 </div>
                 <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Your public key" data-aos="fade-up"
-                        data-aos-delay="300">
+                    <input type="text" class="form-control" name="sender" id="sender" placeholder="Your public key"
+                        data-aos="fade-up" data-aos-delay="300">
                 </div>
             </div>
             <div class="form-row">
                 <div class="col-5">
-                    <input type="number" class="form-control" placeholder="Coin" data-aos="fade-up"
-                        data-aos-delay="400">
+                    <input type="number" class="form-control" name="amount" id="amount" placeholder="amount"
+                        data-aos="fade-up" data-aos-delay="400">
                 </div>
                 <div class="col-5">
-                    <input type="text" class="form-control" placeholder="recipient public key" data-aos="fade-up"
-                        data-aos-delay="400">
+                    <input type="text" class="form-control" name="recipient" id="recipient"
+                        placeholder="recipient public key" data-aos="fade-up" data-aos-delay="400">
                 </div>
             </div>
             <div class="row justify-content-end" data-aos="fade-up" data-aos-delay="500">
-                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-primary" id="formSendCoin">Send</button>
             </div>
-
         </form>
+        <script>
+            $('#formSendCoin').on('click', function (e) {
+                let privKey = $('#privKey').val();
+                let sender = $('#sender').val();
+                let amount = $('#amount').val();
+                let recipient = $('#recipient').val();
+
+                $.ajax({
+                    method: 'post',
+                    url: '/transaction/broadcast',
+                    data: { privKey: privKey, sender: sender, amount: amount, recipient: recipient },
+                    dataType: 'json'
+                })
+                    .done(function (data) {
+                        let html = ``
+
+                        for (let pending of data.pendingTransactions) {
+                            html += `<tr class="table-success">
+                    <td style="width: 50px;">${pending.date}</td>
+                    <td style="width: 250px;">${pending.sender}</td>
+                    <td style="width: 250px;">${pending.recipient}</td>
+                    <td style="width: 50px;">${pending.amount}</td>
+                    <td style="width: 50px;">1</td>
+                     
+                </tr>`
+                        }
+                        //        for (let block of data.chain) {
+                        //          html += `<tr class="table-success">
+                        //  <td style="width: 250px;">${block.hash}</td>
+                        //  <td style="width: 50px;">Mined</td>
+                        //  <td style="width: 50px;">${block.index}</td>
+                        //  <td style="width: 50px;">${block.transactions[0].date}</td>
+                        //   <td style="width: 250px;">${block.transactions[0].sender}</td>
+                        //  <td style="width: 250px;">${block.transactions[0].recipient}</td>
+                        //  <td style="width: 50px;">${block.transactions[0].amount}</td>
+                        //   <td style="width: 50px;">1</td>
+                        //  </tr>`
+                        //     } 
+                        $('#tableTransaction').html(html);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                event.preventDefault();
+            })
+        </script>
     </div>
 </section>
 
@@ -96,13 +138,14 @@
 <!-- BUY -->
 <section class="class section" id="buy">
     <div class="container">
+
         <div class="row col-12">
             <div class="col-7">
                 <img src="/images/class/chart.JPG" class="img-fluid" alt="">
             </div>
             <div class="col-5">
                 <form>
-                    <div class="row">
+                    {{!-- <div class="row">
                         <input type="number" name="" id="">
                         <select name="" id="">
                             <option disabled value="">VCCOIN</option>
@@ -113,7 +156,7 @@
                         <select name="" id="">
                             <option disabled value="">VCCOIN</option>
                         </select>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
         </div>
@@ -123,114 +166,24 @@
 
 <!-- TRANSACTION -->
 <section class="schedule section" id="transaction">
-    <div class="container">
-        <table class="table table-hover" data-aos="fade-up" data-aos-delay="300">
-            <thead>
-                <tr class="table-danger">
-                    <th scope="col">Txn Hash</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Block</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">From</th>
-                    <th scope="col">To</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">Txn Fee</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-                <tr class="table-success">
-                    <td>dfhgjgffhgfh</td>
-                    <td>Mining</td>
-                    <td>2</td>
-                    <td>6 seconds ago</td>
-                    <td>gfhfdg</td>
-                    <td>dfhgfhfghf</td>
-                    <td>6</td>
-                    <td>0.12</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <table class="table table-hover" data-aos="fade-up" data-aos-delay="300">
+        <thead>
+            <tr class="table-danger">
+                <th scope="col" style="width: 50px;">Time</th>
+                <th scope="col" style="width: 250px;">From</th>
+                <th scope="col" style="width: 250px;">To</th>
+                <th scope="col">Value</th>
+                <th scope="col" style="width: 50px;">Txn Fee</th>
+            </tr>
+        </thead>
+        <tbody id="tableTransaction">
+
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mineBlock">
+        Mine
+    </button>
+
 </section>
 
 
@@ -241,24 +194,37 @@
             <div class="ml-auto col-lg-4 col-md-6 col-12">
                 <h2 class="mb-4 pb-2" data-aos="fade-up" data-aos-delay="200">Create a wallet</h2>
 
-                <form action="#" method="post" class="contact-form webform" data-aos="fade-up" data-aos-delay="300"
-                    role="form">
-                    <input type="email" class="form-control" name="cw-email" placeholder="Email">
+                <form method="POST" class="contact-form webform" id="fCreateWallet" data-aos="fade-up"
+                    data-aos-delay="300">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email">
 
-                    <input type="password" class="form-control" name="cw-password" placeholder="Password">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
 
-                    <input type="password" class="form-control" name="cw-password" placeholder="Comfirm Password">
+                    <input type="password" class="form-control" name="cfpassword" id="cfpassword"
+                        placeholder="Comfirm Password">
 
                     <button type="submit" class="form-control" id="submit-button" name="submit">SIGN UP</button>
                     <a href="">Your have a already account</a>
+
                 </form>
+                <script>
+
+                </script>
             </div>
 
             <div class="mx-auto mt-4 mt-lg-0 mt-md-0 col-lg-7 col-md-6 col-12">
                 <h2 class="mb-4 pb-2" data-aos="fade-up" data-aos-delay="400">Find your transactions</h2>
-                <form action="#" method="post" class="contact-form webform" data-aos="fade-up" data-aos-delay="400"
-                    role="form">
-                    <input type="text" name="" id="" placeholder="Your public key" class="form-control">
+                <form class="contact-form webform" data-aos="fade-up" data-aos-delay="400" role="form">
+                    <div class="row">
+                        <div class="col-10">
+                            <input type="text" name="" id="keySearch" placeholder="Your public key"
+                                class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class=" form-control " id="submit-button1">Search</button>
+                        </div>
+                    </div>
+
                 </form>
                 <table class="table" data-aos="fade-up" data-aos-delay="500">
                     <thead class="thead-dark">
@@ -270,28 +236,8 @@
                             <th scope="col">Value</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                            <td>@twitter</td>
-                        </tr>
+                    <tbody id="tableDetailTransaction">
+
                     </tbody>
                 </table>
 
@@ -300,3 +246,73 @@
         </div>
     </div>
 </section>
+<script>
+    $("body").delegate('#saveToMine', 'click', function () {
+        let private = $('#mineprivate').val();
+        let public = $('#minepublic').val();
+        $.ajax({
+            method: 'post',
+            url: '/hashKeys',
+            data: { key2: public, key1: private }
+        })
+            .done(function (data) {
+                console.log(data);
+                if (data) {
+
+                    $.ajax({
+                        method: 'get',
+                        url: '/mine',
+                        data: { public_key: public }
+                    })
+                        .done(function (data) {
+                            $('#tableTransaction td').remove();
+                        })
+                }
+
+            });
+    });
+    $('#submit-button1').on('click', function () {
+        let keySearch = $('#keySearch').val();
+        $.ajax({
+            method: 'post',
+            url: '/show-transaction',
+            data: { keySearch: keySearch }
+        })
+            .done(function (data) {
+                let html
+                let index = 1;
+                for (let item of data.addressTransactions) {
+                    html += `<tr class="table-success">
+                    <td style="width: 50px;">${index}</td>
+                    <td style="width: 250px;">${item.sender}</td>
+                    <td style="width: 250px;">${item.recipient}</td>
+                    <td style="width: 50px;">${item.date}</td>
+                    <td style="width: 50px;">${item.amount}</td> 
+                </tr>`;
+                }
+                $('#tableDetailTransaction').html(html);
+            });
+    })
+</script>
+
+<div class="modal fade" id="mineBlock" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="mineprivate" class="form-control" placeholder="private key">
+                <input type="text" id="minepublic" class="form-control" placeholder="public key">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveToMine">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

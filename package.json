@@ -17,6 +17,9 @@
     "fs": "0.0.1-security",
     "mongodb": "^3.6.6",
     "numeral": "^2.0.6",
+    "reques": "0.0.1-security",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "sha256": "^0.2.0",
     "uniqid": "^5.3.0",
     "uuid": "^8.3.2"

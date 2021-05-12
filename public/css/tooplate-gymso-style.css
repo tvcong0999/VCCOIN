@@ -532,6 +532,9 @@ https://www.tooplate.com/view/2119-gymso-fitness
   button#submit-button {
     height: calc(2.25rem + 20px);
   }
+  button#submit-button1 {
+    height: calc(2.25rem + 20px);
+  }
 
   .form-control {
     border-radius: var(--border-radius-small);
@@ -550,9 +553,19 @@ https://www.tooplate.com/view/2119-gymso-fitness
     cursor: pointer;
     transition: all 0.3s ease;
   }
+  button#submit-button1 {
+    background-color: rgb(59, 69, 207);
+    border-color: transparent;
+    color: var(--white-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
 
   button#submit-button:hover {
     background: var(--primary-color);
+  }
+  button#submit-button1:hover {
+    background-color: #0d31d4;
   }
 
   .contact h2 + p {
