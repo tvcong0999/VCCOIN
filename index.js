@@ -51,9 +51,10 @@ var url = "mongodb://localhost:27017/VCCOINDB";
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('view engine', 'hbs');
 
 app.set("views", "./views");
+
+app.set('view engine', 'hbs');
 
 app.engine('hbs', exphbs({
     defaultLayout: 'index.hbs',
@@ -82,12 +83,12 @@ app.get('/', (req, res)=>{
 });
 
 
-app.post('/', (req, res)=>{
+app.post('/wallet', async (req, res)=>{
+    let privateKey = uuid().split('-').join(''); //privateKey
+    let public_key = sha256(privateKey); //publicKey
+    let data;
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
-        let privateKey = uuid().split('-').join(''); //privateKey
-        let public_key = sha256(privateKey); //publicKey
-        
         let dbo = db.db("VCCOINDB");
         var user = {//master user
             username: req.body.email,
@@ -130,9 +131,13 @@ app.post('/', (req, res)=>{
         //         console.log('Message sent: ' + info.response);
         //     }
         // });
+        data = await backup.getAddressData(public_key).addressBalance;
     });
 
-    res.render('wallet');
+    res.render('wallet',{
+        balance: data,
+        public_key: public_key,
+    });
 })
 
 app.post('/transaction/broadcast', (req, res)=>{
