@@ -12,11 +12,11 @@ function Blockchain() {
 }
 
 // create new block and insert pending transaction
-Blockchain.prototype.createNewBlock = function (nonce, previousBlockHash, hash) {
+Blockchain.prototype.createNewBlock = function(nonce, previousBlockHash, hash) {
     const newBlock = {
         index: this.chain.length + 1,
         timestamp: Date.now(),
-        date: new Date().toString(),  
+        date: new Date().toString(),
         transactions: this.pendingTransactions,
         nonce: nonce,
         hash: hash,
@@ -28,12 +28,12 @@ Blockchain.prototype.createNewBlock = function (nonce, previousBlockHash, hash) 
 }
 
 // get last block
-Blockchain.prototype.getLastBlock = function () {
+Blockchain.prototype.getLastBlock = function() {
     return this.chain[this.chain.length - 1];
 }
 
 // create transaction into pending transaction
-Blockchain.prototype.createNewTransaction = function (amount, sender, recipient) {
+Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) {
     const newTransaction = {
         transactionId: uuid().split('-').join(''),
         amount: amount,
@@ -45,20 +45,20 @@ Blockchain.prototype.createNewTransaction = function (amount, sender, recipient)
     return newTransaction;
 }
 
-Blockchain.prototype.addTransactionToPendingTransactions = function (transactionObject) {
+Blockchain.prototype.addTransactionToPendingTransactions = function(transactionObject) {
     this.pendingTransactions.push(transactionObject); //push to the pendingTransactions array a new transaction
     return this.getLastBlock()['index'] + 1;
 }
 
 // hash block
-Blockchain.prototype.hashBlock = function (previousBlockHash, currentBlockData, nonce) {
+Blockchain.prototype.hashBlock = function(previousBlockHash, currentBlockData, nonce) {
     const dataAsString = previousBlockHash + nonce.toString() + JSON.stringify(currentBlockData); //merge parameters into a single string.
     const hash = sha256(dataAsString);
     return hash;
 }
 
 // Proof of work
-Blockchain.prototype.proofOfWork = function (previousBlockHash, currentBlockData) {
+Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData) {
     let nonce = 0;
     let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
     while (hash.substring(0, 4) !== '0000') { //generate a new hash until the first 4 chars of the hash will be equals to '0000'. 
@@ -68,7 +68,7 @@ Blockchain.prototype.proofOfWork = function (previousBlockHash, currentBlockData
     return nonce;
 }
 
-Blockchain.prototype.chainIsValid = function (blockchain) {
+Blockchain.prototype.chainIsValid = function(blockchain) {
 
     let validChain = true;
 
@@ -92,7 +92,7 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
     return validChain;
 };
 
-Blockchain.prototype.getBlock = function (blockHash) {
+Blockchain.prototype.getBlock = function(blockHash) {
     let correctBlock = null;
     this.chain.forEach(block => {
         if (block.hash === blockHash)
@@ -101,7 +101,7 @@ Blockchain.prototype.getBlock = function (blockHash) {
     return correctBlock;
 };
 
-Blockchain.prototype.getTransaction = function (transactionId) {
+Blockchain.prototype.getTransaction = function(transactionId) {
     let correctTransaction = null;
     let correctBlock = null;
 
@@ -120,11 +120,11 @@ Blockchain.prototype.getTransaction = function (transactionId) {
     };
 };
 
-Blockchain.prototype.getPendingTransactions = function () {
+Blockchain.prototype.getPendingTransactions = function() {
     return this.pendingTransactions;
 };
 
-Blockchain.prototype.getAddressData = function (address) {
+Blockchain.prototype.getAddressData = function(address) {
     const addressTransactions = [];
     this.chain.forEach(block => {
         block.transactions.forEach(transaction => {
@@ -139,18 +139,17 @@ Blockchain.prototype.getAddressData = function (address) {
     }
 
     var amountArr = [];
-    
+
     let balance = 0;
     addressTransactions.forEach(transaction => {
         if (transaction.recipient === address) {
             balance += transaction.amount;
             amountArr.push(balance);
-        }
-        else if (transaction.sender === address) {
+        } else if (transaction.sender === address) {
             balance -= transaction.amount;
             amountArr.push(balance);
         }
-    
+
     });
 
     return {

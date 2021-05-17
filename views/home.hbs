@@ -63,11 +63,11 @@
         <form>
             <div class="form-row">
                 <div class="col-5 d-flex">
-                    <input type="text" class="form-control" name="privKey" id="privKey" placeholder="Your private key"
+                    <input type="text" class="form-control" name="privKey" id="privKey" placeholder="Sender private key"
                         data-aos="fade-up" data-aos-delay="300">
                 </div>
                 <div class="col-5">
-                    <input type="text" class="form-control" name="sender" id="sender" placeholder="Your public key"
+                    <input type="text" class="form-control" name="sender" id="sender" placeholder="Sender public key"
                         data-aos="fade-up" data-aos-delay="300">
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-5">
                     <input type="text" class="form-control" name="recipient" id="recipient"
-                        placeholder="recipient public key" data-aos="fade-up" data-aos-delay="400">
+                        placeholder="Recipient public key" data-aos="fade-up" data-aos-delay="400">
                 </div>
             </div>
             <div class="row justify-content-end" data-aos="fade-up" data-aos-delay="500">
@@ -103,26 +103,17 @@
 
                         for (let pending of data.pendingTransactions) {
                             html += `<tr class="table-success">
-                    <td style="width: 50px;">${pending.date}</td>
-                    <td style="width: 250px;">${pending.sender}</td>
-                    <td style="width: 250px;">${pending.recipient}</td>
-                    <td style="width: 50px;">${pending.amount}</td>
-                    <td style="width: 50px;">1</td>
-                     
-                </tr>`
+                            <td>${pending.date}</td>
+                            <td style="word-wrap:break-word;">${pending.sender}</td>
+                            <td style="word-wrap:break-word;"">${pending.recipient}</td>
+                            <td>${pending.amount}</td>
+                            <td>1</td>
+                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mineBlock">Mine</button>
+                            </td>
+                            
+                            </tr>`
                         }
-                        //        for (let block of data.chain) {
-                        //          html += `<tr class="table-success">
-                        //  <td style="width: 250px;">${block.hash}</td>
-                        //  <td style="width: 50px;">Mined</td>
-                        //  <td style="width: 50px;">${block.index}</td>
-                        //  <td style="width: 50px;">${block.transactions[0].date}</td>
-                        //   <td style="width: 250px;">${block.transactions[0].sender}</td>
-                        //  <td style="width: 250px;">${block.transactions[0].recipient}</td>
-                        //  <td style="width: 50px;">${block.transactions[0].amount}</td>
-                        //   <td style="width: 50px;">1</td>
-                        //  </tr>`
-                        //     } 
+
                         $('#tableTransaction').html(html);
                     })
                     .catch(err => {
@@ -166,111 +157,125 @@
 
 <!-- TRANSACTION -->
 <section class="schedule section" id="transaction">
-    <table class="table table-hover" data-aos="fade-up" data-aos-delay="300">
+    <table class="table table-hover" data-aos="fade-up" data-aos-delay="300" style="table-layout: fixed;">
         <thead>
             <tr class="table-danger">
-                <th scope="col" style="width: 50px;">Time</th>
-                <th scope="col" style="width: 250px;">From</th>
-                <th scope="col" style="width: 250px;">To</th>
-                <th scope="col">Value</th>
-                <th scope="col" style="width: 50px;">Txn Fee</th>
+                <th>Time</th>
+                <th style="width: 500px;">From</th>
+                <th style="width: 500px;">To</th>
+                <th>Value</th>
+                <th>Txn Fee</th>
+                <th>Mine</th>
             </tr>
         </thead>
         <tbody id="tableTransaction">
-
+            <tr class="table-success">
+            </tr>
         </tbody>
     </table>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mineBlock">
-        Mine
-    </button>
+
 
 </section>
 
 
 <!-- CONTACT -->
 <section class="contact section" id="wallet">
-    <div class="container">
-        <div class="row">
-            <div class="ml-auto col-lg-4 col-md-6 col-12">
-                <h2 class="mb-4 pb-2" data-aos="fade-up" data-aos-delay="200">Create a wallet</h2>
+    <div class="row">
+        <div class="ml-auto col-lg-3 col-md-6 col-12">
+            <h2 class="mb-4 pb-2" data-aos="fade-up" data-aos-delay="200">Create a wallet</h2>
 
-                <form action="/wallet" method="POST" class="contact-form webform" id="fCreateWallet" data-aos="fade-up"
-                    data-aos-delay="300">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+            <form class="contact-form webform" id="fCreateWallet" data-aos="fade-up" data-aos-delay="300">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email">
 
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
 
-                    <input type="password" class="form-control" name="cfpassword" id="cfpassword"
-                        placeholder="Comfirm Password">
+                <input type="password" class="form-control" name="cfpassword" id="cfpassword"
+                    placeholder="Comfirm Password">
 
-                    <button type="submit" class="form-control" id="submit-button" name="submit">SIGN UP</button>
-                    <a href="">Your have a already account</a>
+                <button type="button" class="form-control createWallet" id="submit-button">SIGN
+                    UP</button>
+                <a href="">Your have a already account</a>
 
-                </form>
-                <script>
+            </form>
+            <script>
+                $('.createWallet').on('click', function () {
+                    let email = $('#email').val();
+                    let pass = $('#password').val();
+                    $.ajax({
+                        method: 'post',
+                        url: '/wallet',
+                        data: { email: email, password: pass }
+                    }).done(function () {
+                        $('#email').html('');
+                        $('#password').html('');
+                        $('#cfpassword').html('');
+                        alert("Your public key and private key were send to your email!")
 
-                </script>
-            </div>
+                    });
+                });
+            </script>
+        </div>
 
-            <div class="mx-auto mt-4 mt-lg-0 mt-md-0 col-lg-7 col-md-6 col-12">
-                <h2 class="mb-4 pb-2" data-aos="fade-up" data-aos-delay="400">Find your transactions</h2>
-                <form class="contact-form webform" data-aos="fade-up" data-aos-delay="400" role="form">
-                    <div class="row">
-                        <div class="col-10">
-                            <input type="text" name="" id="keySearch" placeholder="Your public key"
-                                class="form-control">
-                        </div>
-                        <div class="col-2">
-                            <button type="button" class=" form-control " id="submit-button1">Search</button>
-                        </div>
+        <div class="mx-auto mt-4 mt-lg-0 mt-md-0 col-lg-7 col-md-6 col-12">
+            <h2 class="mb-4 pb-2" data-aos="fade-up" data-aos-delay="400">Find your transactions</h2>
+            <form class="contact-form webform" data-aos="fade-up" data-aos-delay="400" role="form">
+                <div class="row">
+                    <div class="col-10">
+                        <input type="text" name="" id="keySearch" placeholder="Your public key" class="form-control">
                     </div>
+                    <div class="col-2">
+                        <button type="button" class=" form-control " id="submit-button1">Search</button>
+                    </div>
+                </div>
 
-                </form>
-                <table class="table" data-aos="fade-up" data-aos-delay="500">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">From</th>
-                            <th scope="col">To</th>
-                            <th scope="col">Date time</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableDetailTransaction">
+            </form>
+            <table class="table" data-aos="fade-up" data-aos-delay="500" style="table-layout: fixed;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width: 5px;">#</th>
+                        <th style="width: 110px;">From</th>
+                        <th style="width: 110px;">To</th>
+                        <th style="width: 25px;">Date time</th>
+                        <th style="width: 10px;">Value</th>
+                    </tr>
+                </thead>
+                <tbody id="tableDetailTransaction">
 
-                    </tbody>
-                </table>
-
-            </div>
+                </tbody>
+            </table>
+            <p class="text-primary" id="totalCoin" style="margin-left: 740px"></p>
 
         </div>
+
     </div>
 </section>
 <script>
     $("body").delegate('#saveToMine', 'click', function () {
         let private = $('#mineprivate').val();
-        let public = $('#minepublic').val();
+        var public = $('#minepublic').val();
         $.ajax({
             method: 'post',
             url: '/hashKeys',
-            data: { key2: public, key1: private }
-        })
-            .done(function (data) {
-                console.log(data);
-                if (data) {
-
-                    $.ajax({
-                        method: 'get',
-                        url: '/mine',
-                        data: { public_key: public }
-                    })
-                        .done(function (data) {
-                            $('#tableTransaction td').remove();
-                        })
+            data: { key2: public, key1: private },
+            success: function () {
+                callMine();
+            }
+        });
+        function callMine() {
+            console.log(public);
+            $.ajax({
+                method: 'get',
+                url: '/mine',
+                data: { recipientReward: public },
+                success: function () {
+                    $('#tableTransaction td').remove();
+                    alert("Mine successfully!")
                 }
-
             });
+        }
     });
+
+
     $('#submit-button1').on('click', function () {
         let keySearch = $('#keySearch').val();
         $.ajax({
@@ -283,14 +288,16 @@
                 let index = 1;
                 for (let item of data.addressTransactions) {
                     html += `<tr class="table-success">
-                    <td style="width: 50px;">${index}</td>
-                    <td style="width: 250px;">${item.sender}</td>
-                    <td style="width: 250px;">${item.recipient}</td>
-                    <td style="width: 50px;">${item.date}</td>
-                    <td style="width: 50px;">${item.amount}</td> 
+                    <td>${index}</td>
+                    <td style="word-wrap:break-word;">${item.sender}</td>
+                    <td style="word-wrap:break-word;">${item.recipient}</td>
+                    <td>${item.date}</td>
+                    <td>${item.amount}</td> 
                 </tr>`;
                 }
+                let totalCoin = data.addressBalance;
                 $('#tableDetailTransaction').html(html);
+                $('#totalCoin').html('Total Coin: ' + totalCoin);
             });
     })
 </script>

@@ -16,6 +16,7 @@
     "express-handlebars-sections": "^1.0.1",
     "fs": "0.0.1-security",
     "mongodb": "^3.6.6",
+    "nodemailer": "^6.6.0",
     "numeral": "^2.0.6",
     "reques": "0.0.1-security",
     "request": "^2.88.2",

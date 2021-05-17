@@ -1,0 +1,3 @@
+- create table user, block, pendingtransaction nếu lần đầu
+- Khi broadcast insert transaction vào table pendingtransaction
+- Khi mine thành công thì delete pendingtransaction đó và insert vào table block
