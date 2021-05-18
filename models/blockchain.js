@@ -37,7 +37,7 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) 
     const newTransaction = {
         transactionId: uuid().split('-').join(''),
         amount: amount,
-        date: new Date().getDay().toString() + "." + new Date().getMonth().toString() + "." + new Date().getFullYear().toString(),
+        date: new Date().getDate().toString() + "." + (new Date().getMonth() + 1).toString() + "." + new Date().getFullYear().toString() + " - " + new Date().getHours().toString() + ":" + new Date().getMinutes().toString() + ":" + new Date().getSeconds().toString(),
         sender: sender,
         recipient: recipient
     }

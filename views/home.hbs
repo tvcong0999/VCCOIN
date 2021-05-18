@@ -115,6 +115,7 @@
                         }
 
                         $('#tableTransaction').html(html);
+                        alert("Transaction successfully!");
                     })
                     .catch(err => {
                         console.log(err);
@@ -160,7 +161,7 @@
     <table class="table table-hover" data-aos="fade-up" data-aos-delay="300" style="table-layout: fixed;">
         <thead>
             <tr class="table-danger">
-                <th>Time</th>
+                <th style="width: 175px;">Date Time</th>
                 <th style="width: 500px;">From</th>
                 <th style="width: 500px;">To</th>
                 <th>Value</th>
@@ -232,10 +233,9 @@
             <table class="table" data-aos="fade-up" data-aos-delay="500" style="table-layout: fixed;">
                 <thead class="thead-dark">
                     <tr>
-                        <th style="width: 5px;">#</th>
-                        <th style="width: 110px;">From</th>
-                        <th style="width: 110px;">To</th>
-                        <th style="width: 25px;">Date time</th>
+                        <th style="width: 100px;">From</th>
+                        <th style="width: 100px;">To</th>
+                        <th style="width: 80px;">Date time</th>
                         <th style="width: 10px;">Value</th>
                     </tr>
                 </thead>
@@ -278,6 +278,7 @@
 
     $('#submit-button1').on('click', function () {
         let keySearch = $('#keySearch').val();
+        $('#tableDetailTransaction td').remove();
         $.ajax({
             method: 'post',
             url: '/show-transaction',
@@ -285,10 +286,8 @@
         })
             .done(function (data) {
                 let html
-                let index = 1;
                 for (let item of data.addressTransactions) {
                     html += `<tr class="table-success">
-                    <td>${index}</td>
                     <td style="word-wrap:break-word;">${item.sender}</td>
                     <td style="word-wrap:break-word;">${item.recipient}</td>
                     <td>${item.date}</td>

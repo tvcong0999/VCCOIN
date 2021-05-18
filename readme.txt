@@ -6,4 +6,4 @@
 	- Hoàn thành: Tạo ví, chuyển coin, xem thông tin giao dịch, đào coin, tặng reward cho miner, thống kê số dư
 	- Chưa hoàn thành: Realtime app
 
-* Link demo: https://drive.google.com/file/d/1k0SBGVbX0UOiR7ZZnV41EKo8775P3z8u/view?usp=sharing
+* Link demo: https://drive.google.com/file/d/1-Xc8nSXAPo1OWLGt8_VwNrhD2dh0ThFj/view?usp=sharing

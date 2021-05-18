@@ -219,7 +219,8 @@ var recipientReward = "";
 app.get('/mine', (req, res) => {
     const lastBlock = backup.getLastBlock();
     const previousBlockHash = lastBlock['hash'];
-
+    const transactionReward = backup.createNewTransaction(1, "system-reward", recipientReward);
+    backup.pendingTransactions.push(transactionReward);
     const currentBlockData = {
         transactions: backup.pendingTransactions,
         index: lastBlock['index'] + 1
@@ -237,46 +238,48 @@ app.get('/mine', (req, res) => {
     };
     rp(requestOptions)
         .then(data => { //reward the miner after mining succed and new block already created
-            const requestOptions = {
-                uri: 'http://localhost:3000/transaction/broadcast',
-                method: 'POST',
-                body: {
-                    amount: 1,
-                    sender: "system-reward",
-                    recipient: recipientReward
-                },
-                json: true
-            };
-            return rp(requestOptions);
-        })
-        .then(data => {
-            const lastBlock1 = backup.getLastBlock();
-            const previousBlockHash1 = lastBlock1['hash'];
+            //     const requestOptions = {
+            //         uri: 'http://localhost:3000/transaction/broadcast',
+            //         method: 'POST',
+            //         body: {
+            //             amount: 1,
+            //             sender: "system-reward",
+            //             recipient: recipientReward
+            //         },
+            //         json: true
+            //     };
+            //     return rp(requestOptions);
+            // })
+            // .then(data => {
+            //     const lastBlock1 = backup.getLastBlock();
+            //     const previousBlockHash1 = lastBlock1['hash'];
 
-            const currentBlockData1 = {
-                transactions: backup.pendingTransactions,
-                index: lastBlock1['index'] + 1
-            }
+            //     const currentBlockData1 = {
+            //         transactions: backup.pendingTransactions,
+            //         index: lastBlock1['index'] + 1
+            //     }
 
-            const nonce1 = backup.proofOfWork(previousBlockHash1, currentBlockData1); //doing a proof of work
-            const blockHash1 = backup.hashBlock(previousBlockHash1, currentBlockData1, nonce1); //hash the block
-            const newBlock1 = backup.createNewBlock(nonce1, previousBlockHash1, blockHash1); //create a new block with params 
+            //     const nonce1 = backup.proofOfWork(previousBlockHash1, currentBlockData1); //doing a proof of work
+            //     const blockHash1 = backup.hashBlock(previousBlockHash1, currentBlockData1, nonce1); //hash the block
+            //     const newBlock1 = backup.createNewBlock(nonce1, previousBlockHash1, blockHash1); //create a new block with params 
 
-            const requestOptions1 = { //a promise to make a new block
-                uri: 'http://localhost:3000/receive-new-block',
-                method: 'POST',
-                body: { newBlock: newBlock1 },
-                json: true
-            };
-            return rp(requestOptions1);
-        })
-        .then(data => {
+            //     const requestOptions1 = { //a promise to make a new block
+            //         uri: 'http://localhost:3000/receive-new-block',
+            //         method: 'POST',
+            //         body: { newBlock: newBlock1 },
+            //         json: true
+            //     };
+            //     return rp(requestOptions1);
+            // })
+            // .then(data => {
             res.json({
                 note: "New block mined and broadcast successfully",
                 block: newBlock
             });
+            // });
         });
 });
+
 
 app.post('/receive-new-block', (req, res) => {
     const newBlock = req.body.newBlock;
